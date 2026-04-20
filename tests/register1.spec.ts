@@ -65,7 +65,7 @@ test("multiSelector using clicks", async({page})=>{
 
 // using selector options 
 
-test.only("using selctor option",async({page})=>{
+test("using selctor option",async({page})=>{
 
     await page.goto("https://demo.automationtesting.in/Register.html")
 
