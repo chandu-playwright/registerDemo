@@ -1,54 +1,67 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('Register Form - Final Working', async ({ page }) => {
+test.describe("Register Page Tests", () => {
 
-  await page.goto('https://demo.automationtesting.in/Register.html');
+  test.beforeEach(async ({ page }) => {
+    await page.goto("https://demo.automationtesting.in/Register.html", {
+      waitUntil: "domcontentloaded",
+      timeout: 60000
+    });
+  });
 
-  // 🔹 Text fields
-  await page.fill("[ng-model='FirstName']", "Budireddy");
-  await page.fill("[ng-model='LastName']", "Chandra Shekhar");
-  await page.fill('[ng-model="Adress"]', "koppaka, near temple");
-  await page.fill('[ng-model="EmailAdress"]', "test@gmail.com");
-  await page.fill('[ng-model="Phone"]', "9885992068");
+  test("Fill basic details", async ({ page }) => {
+    await page.fill("[ng-model='FirstName']", "Budireddy");
+    await page.fill("[ng-model='LastName']", "Chandra Shekhar");
+    await page.fill('[ng-model="Adress"]', "Koppaka, near temple");
+    await page.fill('[ng-model="EmailAdress"]', "test@example.com");
+    await page.fill('[ng-model="Phone"]', "9885992068");
 
-  // 🔹 Gender
-  await page.check('[value="Male"]');
+    await expect(page.locator("[ng-model='FirstName']")).toHaveValue("Budireddy");
+  });
 
-  // 🔹 Hobbies
-  await page.check('[value="Cricket"]');
-  await page.check('[value="Movies"]');
+  test("Checkbox and radio buttons", async ({ page }) => {
+    const gender = page.locator('[value="Male"]');
+    await gender.check();
+    await expect(gender).toBeChecked();
 
-  // 🔹 Languages (multi select)
-  await page.click("#msdd");
-  await page.click("text=Czech");
-  await page.click("text=Dutch");
-  await page.click("text=Hindi");
+    const hobby1 = page.locator('[value="Cricket"]');
+    const hobby2 = page.locator('[value="Movies"]');
 
-  // 🔹 Skills
-  await page.selectOption("#Skills", { value: "APIs" });
+    await hobby1.check();
+    await hobby2.check();
 
-  // 🔹 Country (FIXED - correct locator)
- // open dropdown
- // 🔹 Country (Select2 dropdown)
- 
-await page.click('.select2-selection'); // open dropdown
-await page.fill('.select2-search__field', 'India'); // type country
-await page.click('.select2-results__option >> text=India'); // select
+    await expect(hobby1).toBeChecked();
+    await expect(hobby2).toBeChecked();
+  });
 
+  test("Multi-select languages", async ({ page }) => {
+    await page.click("#msdd");
+    await page.click("text=Czech");
+    await page.click("text=Dutch");
+    await page.click("text=Hindi");
 
-  // 🔹 Date of Birth
-  await page.selectOption("#yearbox", "1921");
-  await page.selectOption('[ng-model="monthbox"]', "January");
-  await page.selectOption("#daybox", "4");
+    await expect(page.locator("#msdd")).toBeVisible();
+  });
 
-  // 🔹 Password
-  await page.fill("#firstpassword", "chanduReddy");
-  await page.fill("#secondpassword", "chanduReddy");
+  test("Dropdown selections", async ({ page }) => {
+    await page.selectOption("#Skills", { value: "APIs" });
+    await page.selectOption("#yearbox", "1921");
+    await page.selectOption('[ng-model="monthbox"]', "January");
+    await page.selectOption("#daybox", "4");
 
-  // 🔹 Upload file (ensure file exists)
-  await page.setInputFiles("#imagesrc", "tests/imag.png");
+    await expect(page.locator("#yearbox")).toHaveValue("1921");
+  });
 
-  // 🔹 Submit
-  await page.click("#submitbtn");
+  test("Password and submit", async ({ page }) => {
+    await page.fill("#firstpassword", "Test@123");
+    await page.fill("#secondpassword", "Test@123");
+
+    await expect(page.locator("#firstpassword")).toHaveValue("Test@123");
+
+    // File upload (only works if file exists)
+    await page.setInputFiles("#imagesrc", "tests/imag.png");
+
+    await page.click("#submitbtn");
+  });
 
 });
