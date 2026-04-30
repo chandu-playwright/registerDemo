@@ -58,7 +58,6 @@ test.describe("Register Page Tests", () => {
 
     await expect(page.locator("#firstpassword")).toHaveValue("Test@123");
 
-    // File upload (only works if file exists)
     await page.setInputFiles("#imagesrc", "tests/imag.png");
 
     await page.click("#submitbtn");
