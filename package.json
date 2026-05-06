@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-   "totalpage":" npx playwright test register1.spec.ts --project=chromium --headed"
-
-
+    "totalpage": " npx playwright test register1.spec.ts --project=chromium --headed"
   },
   "keywords": [],
   "author": "",

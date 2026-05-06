@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: [['html', { open: 'never' }]],
 
   use: {
-    headless: process.env.CI ? true : false,   // ✅ FIX
+    headless: process.env.CI ? true : false,
     actionTimeout: 15000,
     navigationTimeout: 60000,
     screenshot: 'only-on-failure',
@@ -28,7 +28,6 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    // ❗ Run other browsers only locally (not in CI)
     ...(process.env.CI ? [] : [
       {
         name: 'firefox',
